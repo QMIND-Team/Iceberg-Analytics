@@ -8,7 +8,7 @@ def importData():
     #numerical data ends at 1366
     #not bringing in booleans rn
     global data
-    data = pd.read_csv("shotDataSample.csv")
+    data = pd.read_csv("data/shotDataSample.csv")
 
 def processData():
     global data
