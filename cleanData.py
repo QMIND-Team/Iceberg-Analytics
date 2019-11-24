@@ -4,9 +4,6 @@ import pandas as pd
 data = []
 
 def importData():
-    #1367 is the label
-    #numerical data ends at 1366
-    #not bringing in booleans rn
     global data
     data = pd.read_csv("data/shotDataSample.csv")
 
