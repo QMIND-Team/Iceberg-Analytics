@@ -3,22 +3,23 @@ import pandas as pd
 
 data = []
 
-
+#read data from csv
 def importData():
     global data
     data = pd.read_csv("data/output.csv")
 
+#calculate output angle
 def anglecalc(x,y):
     if y == 0:
         y = 0.0001
-    if x == -2650:
-        x = -2650.0001
+    if x == 2650:
+        x = 2650.0001
     if y>0:
-        return (45 + math.degrees(math.atan((x+2650)/y)))
-    elif (x+2650)>0:
-        return (135 - math.degrees(math.atan(y/(x+2650))))
+        return (45 - math.degrees(math.atan((x-2650)/y)))
+    elif x<0:
+        return (135 + math.degrees(math.atan(y/(x-2650))))
     else:
-        return (225 + math.degrees(math.atan((x+2650)/y)))
+        return (225 - math.degrees(math.atan((x-2650)/y)))
 
 def processData():
     global data
@@ -32,13 +33,18 @@ def processData():
         y = data.iloc[i, 1]
         xAngle = data.iloc[i,4]
         yAngle = data.iloc[i,5]
-        newAngle = anglecalc(xAngle, yAngle)
-        angles.append(newAngle)
+        #flip data for right side of net
         if x < 0:
             x = -x
             y = -y
+            xAngle = -xAngle
+            yAngle = -yAngle
             data.iloc[i, 0] = x
             data.iloc[i, 1] = y
+            #calculate angle
+        newAngle = anglecalc(xAngle, yAngle)
+        angles.append(newAngle)
+        #calculate shooting bin
         if y > 690:
             if 2650 >= x > 2050:
                 data.iloc[i, 2] = "A1"
@@ -76,9 +82,7 @@ def processData():
             else:
                 data.iloc[i, 2] = "BAD"
     print(data["Shot location"])
-
-    print (len(angles))
-
+    #add new angles column
     data.insert(6, "Rebound Angle", angles, True)
 
     print (data["Rebound Angle"])
