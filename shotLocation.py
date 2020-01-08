@@ -28,6 +28,7 @@ def processData():
     data = data.drop(data.columns[toDelete], axis=1)
     i = 0
     angles = []
+    angleBins = []
     for i in range(0, data.shape[0]):
         x = data.iloc[i, 0]
         y = data.iloc[i, 1]
@@ -44,6 +45,11 @@ def processData():
             #calculate angle
         newAngle = anglecalc(xAngle, yAngle)
         angles.append(newAngle)
+        if math.isnan(newAngle):
+            #-1 = NO REBOUND
+            angleBins.append(-1)
+        else:
+            angleBins.append(int(newAngle/15))
         #calculate shooting bin
         if y > 690:
             if 2650 >= x > 2050:
@@ -84,8 +90,9 @@ def processData():
     print(data["Shot location"])
     #add new angles column
     data.insert(6, "Rebound Angle", angles, True)
+    data.insert(7, "Rebound Bin", angleBins, True)
+    print (data["Rebound Bin"])
 
-    print (data["Rebound Angle"])
 
 
 importData()
