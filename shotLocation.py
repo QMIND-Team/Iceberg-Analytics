@@ -11,7 +11,7 @@ def importData():
 
 
 # calculate output angle
-def anglecalc(x, y):
+def angleCalc(x, y):
     if y == 0:
         y = 0.0001
     if x == 2650:
@@ -46,7 +46,7 @@ def processData():
             data.iloc[i, 0] = x
             data.iloc[i, 1] = y
             # calculate angle
-        newAngle = anglecalc(xAngle, yAngle)
+        newAngle = angleCalc(xAngle, yAngle)
         angles.append(newAngle)
         if math.isnan(newAngle):
             # -1 = NO REBOUND
