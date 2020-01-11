@@ -90,11 +90,11 @@ def processData():
                 data.iloc[i, 2] = "D3"
             else:
                 data.iloc[i, 2] = "BAD"
-    print(data["Shot location"])
+    #print(data["Shot location"])
     # add new angles column
     data.insert(6, "Rebound Angle", angles, True)
     data.insert(7, "Rebound Bin", angleBins, True)
-    print(data["Rebound Bin"])
+    print(data)
 
 
 importData()
