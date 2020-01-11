@@ -6,8 +6,8 @@ def anglecalc(x,y):
     if x == -2650:
         x = -2650.0001
     if y>0:
-        return (45 + math.degrees(math.atan((x+2650)/y)))
+        return 45 + math.degrees(math.atan((x + 2650) / y))
     elif (x+2650)>0:
-        return (135 - math.degrees(math.atan(y/(x+2650))))
+        return 135 - math.degrees(math.atan(y / (x + 2650)))
     else:
-        return (225 + math.degrees(math.atan((x+2650)/y)))
+        return 225 + math.degrees(math.atan((x + 2650) / y))
