@@ -88,49 +88,49 @@ def processData():
         # calculate shooting bin
         if y > 690:
             if 2650 >= x > 2050:
-                data.iloc[i, 2] = "A1"
+                data.iloc[i, 2] = 1
             elif 2050 >= x > 1400:
-                data.iloc[i, 2] = "A2"
+                data.iloc[i, 2] = 2
             elif 1400 >= x >= 750:
-                data.iloc[i, 2] = "A3"
+                data.iloc[i, 2] = 3
             else:
-                data.iloc[i, 2] = "BAD"
+                data.iloc[i, 2] = -999
         elif 690 >= y > 0:
             if 2650 >= x > 2050:
-                data.iloc[i, 2] = "B1"
+                data.iloc[i, 2] = 4
             elif 2050 >= x > 1400:
-                data.iloc[i, 2] = "B2"
+                data.iloc[i, 2] = 5
             elif 1400 >= x >= 750:
-                data.iloc[i, 2] = "B3"
+                data.iloc[i, 2] = 6
             else:
-                data.iloc[i, 2] = "BAD"
+                data.iloc[i, 2] = -999
         elif 0 >= y > -690:
             if 2650 >= x > 2050:
-                data.iloc[i, 2] = "C1"
+                data.iloc[i, 2] = 7
             elif 2050 >= x > 1400:
-                data.iloc[i, 2] = "C2"
+                data.iloc[i, 2] = 8
             elif 1400 >= x >= 750:
-                data.iloc[i, 2] = "C3"
+                data.iloc[i, 2] = 9
             else:
-                data.iloc[i, 2] = "BAD"
+                data.iloc[i, 2] = -999
         else:
             if 2650 >= x > 2050:
-                data.iloc[i, 2] = "D1"
+                data.iloc[i, 2] = 10
             elif 2050 >= x > 1400:
-                data.iloc[i, 2] = "D2"
+                data.iloc[i, 2] = 11
             elif 1400 >= x >= 750:
-                data.iloc[i, 2] = "D3"
+                data.iloc[i, 2] = 12
             else:
-                data.iloc[i, 2] = "BAD"
+                data.iloc[i, 2] = -999
     #print(data["Shot location"])
     # add new angles column
     data.insert(7, "Rebound_Angle", angles, True)
     data.insert(8, "Rebound_Bin", angleBins, True)
-    print(data)
 
 def analyzeData():
     global data
-    data = data.applymap(str)
+    toDelete = [0,1,3,4,5,6,7]
+    data = data.drop(data.columns[toDelete], axis=1)
     train,test = train_test_split(data, test_size = 0.2)
     train,val = train_test_split(data, test_size = 0.2)
     batch_size = 32
@@ -140,16 +140,7 @@ def analyzeData():
 
     feature_columns = []
 
-    shotBin = feature_column.categorical_column_with_vocabulary_list(
-        key = 'Shot_location',
-        vocabulary_list= ["A1","A2","A3","B1","B2","B3","C1","C2","C3","D1","D2","D3","BAD"]
-        )
-    shotBin_one_hot = feature_column.indicator_column(shotBin)
-    feature_columns.append(shotBin_one_hot)
-
-    for f in feature_columns:
-        train[f] = train[f].astype(str)   
-        test[f] = test[f].astype(str) 
+    feature_columns.append(feature_column.numeric_column('Shot_location'))
 
     feature_layer = tf.keras.layers.DenseFeatures(feature_columns)
 
