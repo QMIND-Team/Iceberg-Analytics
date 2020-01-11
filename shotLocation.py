@@ -130,7 +130,7 @@ def processData():
 
 def analyzeData():
     global data
-    data.fillna('', inplace=True)
+    data = data.applymap(str)
     train,test = train_test_split(data, test_size = 0.2)
     train,val = train_test_split(data, test_size = 0.2)
     batch_size = 32
@@ -142,7 +142,8 @@ def analyzeData():
 
     shotBin = feature_column.categorical_column_with_vocabulary_list(
         key = 'Shot_location',
-        vocabulary_list= [str("A1"),"A2","A3","B1","B2","B3","C1","C2","C3","D1","D2","D3","BAD"])
+        vocabulary_list= ["A1","A2","A3","B1","B2","B3","C1","C2","C3","D1","D2","D3","BAD"]
+        )
     shotBin_one_hot = feature_column.indicator_column(shotBin)
     feature_columns.append(shotBin_one_hot)
 
