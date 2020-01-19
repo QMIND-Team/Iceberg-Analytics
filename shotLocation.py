@@ -4,13 +4,13 @@ import pandas as pd
 
 import tensorflow as tf
 
+import sklearn
+
 from tensorflow import feature_column
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
 
 data = []
-
-
 # read data from csv
 def importData():
     global data
@@ -78,10 +78,10 @@ def processData():
         if math.isnan(newAngle):
             if isinstance(data.iloc[i, 3], str):
                 # -1 = NO REBOUND - SAVE
-                angleBins.append(-1)
+                angleBins.append(19)
             else:
                 # -1 = NO REBOUND - GOAL
-                 angleBins.append(-2)
+                 angleBins.append(18)
                  data.iloc[i,3] = "GOAL"
         else:
             angleBins.append(int(newAngle / 15))
@@ -94,7 +94,7 @@ def processData():
             elif 1400 >= x >= 750:
                 data.iloc[i, 2] = 3
             else:
-                data.iloc[i, 2] = -999
+                data.iloc[i, 2] = 13
         elif 690 >= y > 0:
             if 2650 >= x > 2050:
                 data.iloc[i, 2] = 4
@@ -103,7 +103,7 @@ def processData():
             elif 1400 >= x >= 750:
                 data.iloc[i, 2] = 6
             else:
-                data.iloc[i, 2] = -999
+                data.iloc[i, 2] = 13
         elif 0 >= y > -690:
             if 2650 >= x > 2050:
                 data.iloc[i, 2] = 7
@@ -112,7 +112,7 @@ def processData():
             elif 1400 >= x >= 750:
                 data.iloc[i, 2] = 9
             else:
-                data.iloc[i, 2] = -999
+                data.iloc[i, 2] = 13
         else:
             if 2650 >= x > 2050:
                 data.iloc[i, 2] = 10
@@ -121,7 +121,7 @@ def processData():
             elif 1400 >= x >= 750:
                 data.iloc[i, 2] = 12
             else:
-                data.iloc[i, 2] = -999
+                data.iloc[i, 2] = 13
     #print(data["Shot location"])
     # add new angles column
     data.insert(7, "Rebound_Angle", angles, True)
@@ -129,48 +129,45 @@ def processData():
 
 def analyzeData():
     global data
+    #delete unnecessary cols
     toDelete = [0,1,3,4,5,6,7]
-    data = data.drop(data.columns[toDelete], axis=1)
-    train,test = train_test_split(data, test_size = 0.2)
-    train,val = train_test_split(data, test_size = 0.2)
-    batch_size = 32
-    train_ds = df_to_dataset(train, batch_size = batch_size)
-    test_ds = df_to_dataset(test, shuffle = False, batch_size = batch_size)
-    val_ds = df_to_dataset(val, shuffle = False, batch_size = batch_size)
-
+    newData = data.drop(data.columns[toDelete], axis=1)
+    #create new output col, able to manipulate
+    newData['RS'] = newData['Rebound_Bin']
+    uniques = []
+    #check for unique numbers (if there's a hole we'll need to check for this later)
+    for i in range (0, newData.shape[0]):
+        temp = newData.iloc[i,1]
+        if temp not in uniques:
+            uniques.append(temp)
+    #find minimum of unique num set
+    tmin = min(uniques)
+    for i in range(0, newData.shape[0]):
+            newData.iloc[i,2] = int(newData.iloc[i,1]) - tmin    #IMPORTANT: labels have to go from 0-(max)
+    #features/labels
+    x = newData.drop(['RS'], axis = 1)
+    y = newData['RS']
+    #split beween test, train
+    x_train, x_test, y_train, y_test = train_test_split(x,y, test_size = 0.2)
     feature_columns = []
-
     feature_columns.append(feature_column.numeric_column('Shot_location'))
+    #build model
+    learning_rate=0.001
+    optimizer_adam= tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
+    hidden_units=[37,30,19]
+    #SIZE OF UNIQUE STUFF SET
+    model=tf.estimator.DNNClassifier(hidden_units=hidden_units, feature_columns=feature_columns,  optimizer=optimizer_adam, n_classes=len(uniques))
+    model.train(input_fn=lambda: input_fn(features=x_train, labels=y_train, training=True), steps=1000)
+    testing_results = model.evaluate(input_fn=lambda: input_fn(features=x_test, labels=y_test, training=False), steps=1)
+    #output results
+    print(testing_results)
 
-    feature_layer = tf.keras.layers.DenseFeatures(feature_columns)
-
-    model = tf.keras.Sequential([
-        feature_layer,
-        layers.Dense(128, activation='relu'),
-        layers.Dense(128, activation='relu'),
-        layers.Dense(1, activation='sigmoid')
-    ])
-
-    model.compile(optimizer='adam',
-                loss='binary_crossentropy',
-                metrics=['accuracy'])
-
-    model.fit(train_ds,
-            validation_data=val_ds,
-            epochs=5)
-
-    loss,accuracy = model.evaluate(test_ds)
-
-
-
-def df_to_dataset(dataframe, shuffle=True, batch_size=32):
-    dataframe = dataframe.copy()
-    labels = dataframe.pop("Rebound_Bin")
-    ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
-    if shuffle:
-        ds = ds.shuffle(buffer_size = len(dataframe))
-    ds = ds.batch(batch_size)
-    return ds
+#activ for neural net
+def input_fn(features, labels, training=True, batch_size=32 ):
+    dataf = tf.data.Dataset.from_tensor_slices((dict(features), labels))
+    if training:
+        dataf = dataf.shuffle(200).repeat()
+    return dataf.batch(batch_size=batch_size)
 
 
 importData()
