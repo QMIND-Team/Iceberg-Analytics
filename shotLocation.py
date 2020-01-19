@@ -141,6 +141,7 @@ def analyzeData():
         if temp not in uniques:
             uniques.append(temp)
     #find minimum of unique num set
+    print (uniques)
     tmin = min(uniques)
     for i in range(0, newData.shape[0]):
             newData.iloc[i,2] = int(newData.iloc[i,1]) - tmin    #IMPORTANT: labels have to go from 0-(max)
@@ -153,7 +154,13 @@ def analyzeData():
     feature_columns.append(feature_column.numeric_column('Shot_location'))
     #build model
     learning_rate=0.001
-    optimizer_adam= tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
+    '''
+    Use tf.compat.v1.train.AdamOptimizer() instead of tf.optimizers.Adam()
+    '''
+    if (tf.__version__[0] == '2'):
+        optimizer_adam= tf.optimizers.Adam(learning_rate=learning_rate)
+    else:
+        optimizer_adam= tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
     hidden_units=[37,30,19]
     #SIZE OF UNIQUE STUFF SET
     model=tf.estimator.DNNClassifier(hidden_units=hidden_units, feature_columns=feature_columns,  optimizer=optimizer_adam, n_classes=len(uniques))
@@ -173,3 +180,4 @@ def input_fn(features, labels, training=True, batch_size=32 ):
 importData()
 processData()
 analyzeData()
+
