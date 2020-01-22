@@ -168,7 +168,7 @@ def analyzeData():
 
     feature_columns = []
     feature_columns.append(feature_column.numeric_column('Shot_location'))
-    feature_columns.append(feature_column.numeric_column('Save-type'))
+    feature_columns.append(feature_column.numeric_column('Save_type'))
     #build model
     learning_rate=0.001
     '''
