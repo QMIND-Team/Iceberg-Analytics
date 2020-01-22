@@ -149,6 +149,7 @@ def analyzeData():
     newData = data.drop(data.columns[toDelete], axis=1)
     #create new output col, able to manipulate
     newData['RS'] = newData['Rebound_Bin']
+    print (newData)
     uniques = []
     #check for unique numbers (if there's a hole we'll need to check for this later)
     for i in range (0, newData.shape[0]):
@@ -159,7 +160,7 @@ def analyzeData():
     print (uniques)
     tmin = min(uniques)
     for i in range(0, newData.shape[0]):
-            newData.iloc[i,2] = int(newData.iloc[i,1]) - tmin    #IMPORTANT: labels have to go from 0-(max)
+            newData.iloc[i,3] = int(newData.iloc[i,1]) - tmin    #IMPORTANT: labels have to go from 0-(max)
     #features/labels
     x = newData.drop(['RS'], axis = 1)
     y = newData['RS']
@@ -168,7 +169,7 @@ def analyzeData():
 
     feature_columns = []
     feature_columns.append(feature_column.numeric_column('Shot_location'))
-    feature_columns.append(feature_column.numeric_column('Save-type'))
+    feature_columns.append(feature_column.numeric_column('Save_type'))
     #build model
     learning_rate=0.001
     '''
