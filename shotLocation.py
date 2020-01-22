@@ -62,6 +62,7 @@ def processData():
     for i in range(0, data.shape[0]):
         x = data.iloc[i, 0]
         y = data.iloc[i, 1]
+        saveType = data.iloc[i, 3]
         xAngle = data.iloc[i, 5]
         yAngle = data.iloc[i, 6]
         # flip data for right side of net
@@ -123,6 +124,20 @@ def processData():
             else:
                 data.iloc[i, 2] = 13
     #print(data["Shot location"])
+    # Convert Save Type to int values
+        if saveType == ("SAVE_GLOVE"):
+            # print("GLOVE")
+            data.iloc[i, 3] = 0
+        elif saveType == ("SAVE_BLOCKER"):
+            data.iloc[i, 3] = 1
+        elif saveType == ("SAVE_PAD"):
+            data.iloc[i, 3] = 2
+        elif saveType == ("SAVE_STICK"):
+            data.iloc[i, 3] = 3
+        elif saveType == ("SAVE_HAND"):
+            data.iloc[i, 3] = 4
+        else:
+            data.iloc[i, 3] = 5
     # add new angles column
     data.insert(7, "Rebound_Angle", angles, True)
     data.insert(8, "Rebound_Bin", angleBins, True)
@@ -130,7 +145,7 @@ def processData():
 def analyzeData():
     global data
     #delete unnecessary cols
-    toDelete = [0,1,3,4,5,6,7]
+    toDelete = [0,1,4,5,6,7]
     newData = data.drop(data.columns[toDelete], axis=1)
     #create new output col, able to manipulate
     newData['RS'] = newData['Rebound_Bin']
@@ -150,8 +165,10 @@ def analyzeData():
     y = newData['RS']
     #split beween test, train
     x_train, x_test, y_train, y_test = train_test_split(x,y, test_size = 0.2)
+
     feature_columns = []
     feature_columns.append(feature_column.numeric_column('Shot_location'))
+    feature_columns.append(feature_column.numeric_column('Save-type'))
     #build model
     learning_rate=0.001
     '''
@@ -180,4 +197,3 @@ def input_fn(features, labels, training=True, batch_size=32 ):
 importData()
 processData()
 analyzeData()
-
