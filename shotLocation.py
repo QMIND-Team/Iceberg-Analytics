@@ -179,7 +179,14 @@ def analyzeData():
     model=tf.estimator.DNNClassifier(hidden_units=hidden_units, feature_columns=feature_columns,  optimizer=optimizer_adam, n_classes=len(uniques))
     model.train(input_fn=lambda: input_fn(features=x_train, labels=y_train, training=True), steps=1000)
     testing_results = model.evaluate(input_fn=lambda: input_fn(features=x_test, labels=y_test, training=False), steps=1)
-    #output results
+    ptemp = list(model.predict(input_fn=lambda: input_fn(features=x_test, labels=y_test, training=False)))
+    probabilities = []
+    for i in range(len(ptemp)):
+        probabilities.append(ptemp[i])
+    #make this a for loop if you want to see them all
+    nums = probabilities[0]["probabilities"]
+    for i in range(len(nums)):
+        print ('Bin' , i , ' --- ', nums[i])
     print(testing_results)
 
 #activ for neural net
