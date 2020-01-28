@@ -123,7 +123,6 @@ def processData():
                 data.iloc[i, 2] = 12
             else:
                 data.iloc[i, 2] = 13
-    #print(data["Shot location"])
     # Convert Save Type to int values
         if saveType == ("SAVE_GLOVE"):
             # print("GLOVE")
@@ -149,19 +148,18 @@ def analyzeData():
     newData = data.drop(data.columns[toDelete], axis=1)
     #create new output col, able to manipulate
     newData['RS'] = newData['Rebound_Bin']
-    print (newData)
     uniques = []
     #check for unique numbers (if there's a hole we'll need to check for this later)
     for i in range (0, newData.shape[0]):
-        temp = newData.iloc[i,1]
+        temp = newData.iloc[i,2]
         if temp not in uniques:
             uniques.append(temp)
     #find minimum of unique num set
-    print (uniques)
     tmin = min(uniques)
     for i in range(0, newData.shape[0]):
-            newData.iloc[i,3] = int(newData.iloc[i,1]) - tmin    #IMPORTANT: labels have to go from 0-(max)
+            newData.iloc[i,3] = int(newData.iloc[i,2]) - tmin    #IMPORTANT: labels have to go from 0-(max)
     #features/labels
+    print(newData)
     x = newData.drop(['RS'], axis = 1)
     y = newData['RS']
     #split beween test, train
@@ -172,9 +170,6 @@ def analyzeData():
     feature_columns.append(feature_column.numeric_column('Save_type'))
     #build model
     learning_rate=0.001
-    '''
-    Use tf.compat.v1.train.AdamOptimizer() instead of tf.optimizers.Adam()
-    '''
     if (tf.__version__[0] == '2'):
         optimizer_adam= tf.optimizers.Adam(learning_rate=learning_rate)
     else:
