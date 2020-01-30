@@ -125,7 +125,6 @@ def processData():
                 data.iloc[i, 2] = 13
     # Convert Save Type to int values
         if saveType == ("SAVE_GLOVE"):
-            # print("GLOVE")
             data.iloc[i, 3] = 0
         elif saveType == ("SAVE_BLOCKER"):
             data.iloc[i, 3] = 1
@@ -159,7 +158,6 @@ def analyzeData():
     for i in range(0, newData.shape[0]):
             newData.iloc[i,3] = int(newData.iloc[i,2]) - tmin    #IMPORTANT: labels have to go from 0-(max)
     #features/labels
-    print(newData)
     x = newData.drop(['RS'], axis = 1)
     y = newData['RS']
     #split beween test, train
@@ -176,6 +174,8 @@ def analyzeData():
         optimizer_adam= tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
     hidden_units=[37,30,19]
     #SIZE OF UNIQUE STUFF SET
+    print(x_test)
+    print(y_test)
     model=tf.estimator.DNNClassifier(hidden_units=hidden_units, feature_columns=feature_columns,  optimizer=optimizer_adam, n_classes=len(uniques))
     model.train(input_fn=lambda: input_fn(features=x_train, labels=y_train, training=True), steps=1000)
     testing_results = model.evaluate(input_fn=lambda: input_fn(features=x_test, labels=y_test, training=False), steps=1)
@@ -185,9 +185,8 @@ def analyzeData():
         probabilities.append(ptemp[i])
     #make this a for loop if you want to see them all
     nums = probabilities[0]["probabilities"]
-    for i in range(len(nums)):
-        print ('Bin' , i , ' --- ', nums[i])
     print(testing_results)
+    return model
 
 #activ for neural net
 def input_fn(features, labels, training=True, batch_size=32 ):
@@ -196,7 +195,17 @@ def input_fn(features, labels, training=True, batch_size=32 ):
         dataf = dataf.shuffle(200).repeat()
     return dataf.batch(batch_size=batch_size)
 
+def singlePredict(model, loc, typ):
+    data = [[loc,typ,1]]
+    df = pd.DataFrame(data, columns = ['Shot_location', 'Save_type','Rebound_Bin']) 
+    df2= df['Rebound_Bin']
+    ptemp = list(model.predict(input_fn=lambda: input_fn(features=df, labels=df2, training=False)))
+    nums = ptemp[0]["probabilities"]
+    for i in range(len(nums)):
+        print ('Bin' , i , ' --- ', nums[i])
 
 importData()
 processData()
-analyzeData()
+model = analyzeData()
+#predict based on single point, change the params (shot_location, save_type respectively based on GUI input)
+singlePredict(model, 1,1)
