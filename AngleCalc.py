@@ -12,3 +12,6 @@ def angleCalc(x, y):
         return 135 - math.degrees(math.atan(y / (x + 2650)))
     else:
         return 225 + math.degrees(math.atan((x + 2650) / y))
+
+# Testing
+# angleCalc(2000, 600)

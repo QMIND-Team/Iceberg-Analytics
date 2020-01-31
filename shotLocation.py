@@ -79,13 +79,13 @@ def processData():
         if math.isnan(newAngle):
             if isinstance(data.iloc[i, 3], str):
                 # -1 = NO REBOUND - SAVE
-                angleBins.append(19)
+                angleBins.append(10)
             else:
                 # -1 = NO REBOUND - GOAL
-                 angleBins.append(18)
+                 angleBins.append(9)
                  data.iloc[i,3] = "GOAL"
         else:
-            angleBins.append(int(newAngle / 15))
+            angleBins.append(int(newAngle / 30))
         # calculate shooting bin
         if y > 690:
             if 2650 >= x > 2050:
@@ -197,7 +197,7 @@ def input_fn(features, labels, training=True, batch_size=32 ):
 
 def singlePredict(model, loc, typ):
     data = [[loc,typ,1]]
-    df = pd.DataFrame(data, columns = ['Shot_location', 'Save_type','Rebound_Bin']) 
+    df = pd.DataFrame(data, columns = ['Shot_location', 'Save_type','Rebound_Bin'])
     df2= df['Rebound_Bin']
     ptemp = list(model.predict(input_fn=lambda: input_fn(features=df, labels=df2, training=False)))
     nums = ptemp[0]["probabilities"]
@@ -206,6 +206,7 @@ def singlePredict(model, loc, typ):
 
 importData()
 processData()
+#analyzeData()
 model = analyzeData()
 #predict based on single point, change the params (shot_location, save_type respectively based on GUI input)
 singlePredict(model, 1,1)
