@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 
 # Setup tkinter
 window = tk.Tk()
@@ -20,10 +21,18 @@ def motion(event):
     x, y = event.x, event.y
     print('{}, {}'.format(x, y))
 
+# Show puck on interface at desired position
 def onClick(event):
     global puckLocationX, puckLocationY
     print ("Clicked at", event.x, event.y)
     puckLocationX, puckLocationY = event.x, event.y
+
+    load = Image.open("./assets/puck.png")
+    render = ImageTk.PhotoImage(load)
+    img = Label(self, image=render)
+    img.image = render
+    img.place(x=puckLocationX, y=puckLocationY)
+
 
 def checkPuck(event):
     print ("Pressed", repr(event.char))
