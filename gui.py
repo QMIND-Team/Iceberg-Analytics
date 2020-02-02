@@ -1,19 +1,29 @@
 import tkinter as tk
-from tkinter import *
+from PIL import ImageTk, Image
+import sys
+import os
 
 # Setup tkinter
 window = tk.Tk()
 window.title("Rebound Predictor Tool")
-label = tk.Button(window, text = "Rebound tool").pack()
+
+# Include all code from shotLocation.py
+def runSimulation():
+    print("TEST")
+
 
 # Display image
-image = tk.PhotoImage(file="./assets/HockeyRinkZone.png")
-label = tk.Label(image=image)
-label.pack()
+rink = tk.PhotoImage(file="./assets/HockeyRinkZone.png")
+labelRink = tk.Label(image=rink)
+labelRink.pack()
+
+# Set up button(s)
+label = tk.Button(window, text = "No functionality here yet", command=runSimulation()).pack()
 
 # Define globals
 puckLocationX = 0
 puckLocationY = 0
+puckPlaced = False
 
 # Display x-y of mouse
 # Will use this to detect where puck is placed
@@ -29,19 +39,30 @@ def onClick(event):
 
     load = Image.open("./assets/puck.png")
     render = ImageTk.PhotoImage(load)
-    img = Label(self, image=render)
+    img = tk.Label(window, image=render)
     img.image = render
-    img.place(x=puckLocationX, y=puckLocationY)
+    img.place(x=puckLocationX-10, y=puckLocationY-10)
+    puckPlaced = True
 
 
-def checkPuck(event):
+def checkKeyPress(event):
     print ("Pressed", repr(event.char))
-    print(puckLocationX, puckLocationY)
+    if (event.char == 'q'):
+        restart()
+    elif (event.char == '\r'):
+        runSimulation()
+    else:
+        print(puckLocationX, puckLocationY)
 
+def restart():
+    print("TEST")
+    os.execl(sys.executable, sys.executable, *sys.argv)
 
 
 window.bind('<Motion>', motion)
-window.bind('<Button-1>', onClick)
-window.bind("<Key>", checkPuck)
+window.bind('<Button-2>', onClick)
+window.bind("<Key>", checkKeyPress)
+
+window.geometry("+600+300")
 
 window.mainloop()
