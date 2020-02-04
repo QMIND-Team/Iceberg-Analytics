@@ -11,6 +11,9 @@ window.title("Rebound Predictor Tool")
 def runSimulation():
     print("TEST")
 
+# Icon
+window.iconbitmap('./assets/hockey.ico')
+
 
 # Display image
 rink = tk.PhotoImage(file="./assets/HockeyRinkZone.png")
