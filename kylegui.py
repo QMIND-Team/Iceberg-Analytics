@@ -20,9 +20,9 @@ def click(event):
 
 window = Tk()
 window.title("Rebound Predictor Tool")
-photo1 = PhotoImage(file="assets/HockeyRinkZone.png")
+photo1 = PhotoImage(file="assets/rink.png")
 Label (window, image=photo1, bg="blue") .grid(row=0, column=0, sticky=W)
-v = Image.open("assets/goalie.png").resize((500, 500), Image.ANTIALIAS)
+v = Image.open("assets/net.png").resize((500, 500), Image.ANTIALIAS)
 photo2 = ImageTk.PhotoImage(v)
 Label (window, image=photo2, bg="blue") .grid(row=0, column=1, sticky=W)
 
@@ -32,9 +32,9 @@ load = Image.open("./assets/puck.png")
 render = ImageTk.PhotoImage(load)
 img = Label(window, image = render)
 
-load2 = Image.open("./assets/reddot.png")
+load2 = Image.open("./assets/target.png")
 render2 = ImageTk.PhotoImage(load2)
-img2 = Label(window, image = render2)
+img2 = Label(window, image = render2, bg = 'black')
 
 var = StringVar()
 
