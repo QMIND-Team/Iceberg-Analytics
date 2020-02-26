@@ -1,13 +1,16 @@
 from tkinter import *
 from PIL import Image, ImageTk
+from predictor import singlePredict, startup
 
-global puckX, puckY, goalieX, goalieY
+global puckX, puckY, goalieX, goalieY, model
+model = startup()
+
 puckX = -1
 puckY = -1
 goalieX = -1
 goalieY = -1
 def click(event):
-     global puckX, puckY, goalieX, goalieY
+     global puckX, puckY, goalieX, goalieY, model
      if(str(event.widget) == '.!label'):
         img.place(x=event.x-10, y=event.y)
         puckX, puckY = event.x, event.y
@@ -19,8 +22,9 @@ def click(event):
             if puckY >= 100 and puckY <= 490:
                print("The puck is at: "+str(puckX)+", "+str(puckY)+"\n and the goalie coords are: "+str(goalieX)+", "+str(goalieY))
                iceBin, shotBin = convert(goalieX, goalieY, puckX, puckY)
-
-
+               bins = singlePredict(model, iceBin,shotBin)
+               for i in range(len(bins)):
+                  print ('Bin' , i , ' --- ', bins[i])
 
             else:
                print("Invalid input. Please make sure the puck is in a shooting position.")
@@ -31,8 +35,7 @@ def click(event):
      var.set("Puck Coordinates: "+str(puckX)+', '+str(puckY)+"\nGoalie Coordinates: "+str(goalieX)+', '+str(goalieY))
 
 def convert(gX, gY, pX, pY):
-   a = 2
-   return iceBin, 
+   return 1,1
 
 
 window = Tk()

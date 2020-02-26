@@ -9,6 +9,8 @@ import sklearn
 from tensorflow import feature_column
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 data = []
 # read data from csv
@@ -34,27 +36,6 @@ def angleCalc(x, y):
 def processData():
     global data
     toDelete = [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 15]
-    # 0 = Game id
-    # 1 = Home team name
-    # 2 = Away team name
-    # 3 = Event id
-    # 4 = Abs time
-    # 5 = Event
-    # 6 = Shooter team status
-    # 7 = Shooter name
-    # 8 = Shot x
-    # 9 = Shot y
-    # 10 = Goalie team status
-    # 11 = Goalie name
-    # 12 = Goalie x
-    # 13 = Goalie y
-    # 14 = Shot location
-    # 15 = Shot category
-    # 16 = Save type
-    # 17 = Rebound
-    # 18 = Rebound x
-    # 19 = Rebound y
-    # Current data: Shot X , Shot Y, ShotLocation, Rebound (T/F), ReboundX, Rebound Y
     data = data.drop(data.columns[toDelete], axis=1)
     i = 0
     angles = []
@@ -174,18 +155,8 @@ def analyzeData():
         optimizer_adam= tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
     hidden_units=[37,30,19]
     #SIZE OF UNIQUE STUFF SET
-    print(x_test)
-    print(y_test)
     model=tf.estimator.DNNClassifier(hidden_units=hidden_units, feature_columns=feature_columns,  optimizer=optimizer_adam, n_classes=len(uniques))
     model.train(input_fn=lambda: input_fn(features=x_train, labels=y_train, training=True), steps=1000)
-    testing_results = model.evaluate(input_fn=lambda: input_fn(features=x_test, labels=y_test, training=False), steps=1)
-    ptemp = list(model.predict(input_fn=lambda: input_fn(features=x_test, labels=y_test, training=False)))
-    probabilities = []
-    for i in range(len(ptemp)):
-        probabilities.append(ptemp[i])
-    #make this a for loop if you want to see them all
-    nums = probabilities[0]["probabilities"]
-    print(testing_results)
     return model
 
 #activ for neural net
