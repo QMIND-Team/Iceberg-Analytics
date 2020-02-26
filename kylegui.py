@@ -35,14 +35,43 @@ def click(event):
      var.set("Puck Coordinates: "+str(puckX)+', '+str(puckY)+"\nGoalie Coordinates: "+str(goalieX)+', '+str(goalieY))
 
 def convert(gX, gY, pX, pY):
-   return 1,1
+   if pY > 252:
+      if 165 >= pX > 0:
+         sL = 12
+      elif 330 >= pX > 165:
+         sL = 9
+      elif 495 >= pX >= 330:
+         sL = 6
+      else:
+         sL = 3
+   elif 230 >= pY > 126:
+      if 165 >= pX > 0:
+         sL = 11
+      elif 330 >= pX > 165:
+         sL = 8
+      elif 495 >= pX >= 330:
+         sL = 5
+      else:
+         sL = 2
+   elif  126 >= pY > 0:
+      if 165 >= pX > 0:
+         sL = 10
+      elif 330 >= pX > 165:
+         sL = 7
+      elif 495 >= pX >= 330:
+         sL = 4
+      else:
+         sL = 1
+   else:
+      sL = 13
+   return sL,1
 
 
 window = Tk()
 window.title("Rebound Predictor Tool")
 photo1 = PhotoImage(file="assets/rink.png")
 Label (window, image=photo1, bg="blue") .grid(row=0, column=0, sticky=W)
-v = Image.open("assets/net.png").resize((500, 500), Image.ANTIALIAS)
+v = Image.open("assets/net.png").resize((473, 473), Image.ANTIALIAS)
 photo2 = ImageTk.PhotoImage(v)
 Label (window, image=photo2, bg="blue") .grid(row=0, column=1, sticky=W)
 
