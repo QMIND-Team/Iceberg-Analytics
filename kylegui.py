@@ -89,5 +89,8 @@ var = StringVar()
 
 msg = Message(window, textvariable = var, width = 200, relief = RAISED) .grid(row=1, column=0)
 
+# Icon
+window.iconbitmap('./assets/hockey.ico')
+
 window.bind('<Button-1>', click)
 window.mainloop()
