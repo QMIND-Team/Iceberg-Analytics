@@ -2,7 +2,10 @@ from tkinter import *
 from PIL import Image, ImageTk
 
 global puckX, puckY, goalieX, goalieY
-puckX, puckY, goalieX, goalieY = 'None'
+puckX = -1
+puckY = -1
+goalieX = -1
+goalieY = -1
 def click(event):
      global puckX, puckY, goalieX, goalieY
      if(str(event.widget) == '.!label'):
@@ -12,10 +15,24 @@ def click(event):
         img2.place(x=event.x+650, y=event.y-10)
         goalieX, goalieY = event.x, event.y
      elif(str(event.widget) == '.!button'):
-        print("The puck is at: "+str(puckX)+", "+str(puckY)+"\n and the goalie coords are: "+str(goalieX)+", "+str(goalieY))
+         if goalieX <= 440 and goalieX >= 60 and goalieY <= 440 and goalieY >= 100:
+            if puckY >= 100 and puckY <= 490:
+               print("The puck is at: "+str(puckX)+", "+str(puckY)+"\n and the goalie coords are: "+str(goalieX)+", "+str(goalieY))
+               iceBin, shotBin = convert(goalieX, goalieY, puckX, puckY)
+
+
+
+            else:
+               print("Invalid input. Please make sure the puck is in a shooting position.")
+         else:
+            print("Invalid input. Please make sure the target is in the net.")
         #would implement calling the shotLocation file here but need to check if inputs are legal first
 
      var.set("Puck Coordinates: "+str(puckX)+', '+str(puckY)+"\nGoalie Coordinates: "+str(goalieX)+', '+str(goalieY))
+
+def convert(gX, gY, pX, pY):
+   a = 2
+   return iceBin, 
 
 
 window = Tk()

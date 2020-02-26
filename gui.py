@@ -63,7 +63,7 @@ def restart():
 
 
 window.bind('<Motion>', motion)
-window.bind('<Button-2>', onClick)
+window.bind('<Button-1>', onClick)
 window.bind("<Key>", checkKeyPress)
 
 window.geometry("+600+300")
