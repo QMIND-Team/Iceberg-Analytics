@@ -5,12 +5,14 @@ import pandas as pd
 import tensorflow as tf
 
 import sklearn
-
+#block errors
+import tensorflow.python.util.deprecation as deprecation
+if (tf.__version__[0] != '2'):
+    deprecation._PRINT_DEPRECATION_WARNINGS = False
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 from tensorflow import feature_column
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 data = []
 # read data from csv
@@ -178,9 +180,13 @@ def singlePredict(model, loc, typ):
     return nums
 
 def startup():
+    print("Loading Data...")
     importData()
+    print("Processing Data...")
     processData()
+    print("Building Model...")
     model = analyzeData()
+    print("Training Complete!")
     return model
 
 importData()
