@@ -1,9 +1,10 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from predictor import singlePredict, startup
+#from predictor import singlePredict, startup
+from blank import getNums
 
 global puckX, puckY, goalieX, goalieY, model
-model = startup()
+#model = startup()
 
 puckX = -1
 puckY = -1
@@ -22,7 +23,8 @@ def click(event):
             if puckY >= 100 and puckY <= 490:
                print("The puck is at: "+str(puckX)+", "+str(puckY)+"\n and the goalie coords are: "+str(goalieX)+", "+str(goalieY))
                iceBin, shotBin = convert(goalieX, goalieY, puckX, puckY)
-               bins = singlePredict(model, iceBin,shotBin)
+               bins = getNums()
+               #bins = singlePredict(model, iceBin,shotBin)
                for i in range(len(bins)):
                   print ('Bin' , i , ' --- ', bins[i])
 
@@ -69,13 +71,14 @@ def convert(gX, gY, pX, pY):
 
 window = Tk()
 window.title("Rebound Predictor Tool")
+
 photo1 = PhotoImage(file="assets/rink.png")
 Label (window, image=photo1, bg="blue") .grid(row=0, column=0, sticky=W)
 v = Image.open("assets/net.png").resize((473, 473), Image.ANTIALIAS)
 photo2 = ImageTk.PhotoImage(v)
 Label (window, image=photo2, bg="blue") .grid(row=0, column=1, sticky=W)
 
-b = Button (window, text="Check Rebound", width = 13) .grid(row=1, column =1, sticky=W)
+b = Button (window, text="Check Rebound", width = 13).grid(row=1, column =1, sticky=W)
 
 load = Image.open("./assets/puck.png")
 render = ImageTk.PhotoImage(load)

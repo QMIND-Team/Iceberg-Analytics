@@ -79,13 +79,16 @@ def processData():
         if math.isnan(newAngle):
             if isinstance(data.iloc[i, 3], str):
                 # -1 = NO REBOUND - SAVE
-                angleBins.append(10)
+                angleBins.append(8)
             else:
                 # -1 = NO REBOUND - GOAL
                  angleBins.append(9)
                  data.iloc[i,3] = "GOAL"
         else:
-            angleBins.append(int(newAngle / 30))
+            num = (int(newAngle / 30))
+            if num >= 8:
+                num = 7
+            angleBins.append(num)
         # calculate shooting bin
         if y > 690:
             if 2650 >= x > 2050:
@@ -139,6 +142,8 @@ def processData():
     # add new angles column
     data.insert(7, "Rebound_Angle", angles, True)
     data.insert(8, "Rebound_Bin", angleBins, True)
+    print (max(angleBins),"MAX")
+    print (min(angleBins),"MIN")
 
 def analyzeData():
     global data
@@ -174,8 +179,6 @@ def analyzeData():
         optimizer_adam= tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
     hidden_units=[37,30,19]
     #SIZE OF UNIQUE STUFF SET
-    print(x_test)
-    print(y_test)
     model=tf.estimator.DNNClassifier(hidden_units=hidden_units, feature_columns=feature_columns,  optimizer=optimizer_adam, n_classes=len(uniques))
     model.train(input_fn=lambda: input_fn(features=x_train, labels=y_train, training=True), steps=1000)
     testing_results = model.evaluate(input_fn=lambda: input_fn(features=x_test, labels=y_test, training=False), steps=1)

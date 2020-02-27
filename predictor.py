@@ -66,7 +66,10 @@ def processData():
                  angleBins.append(9)
                  data.iloc[i,3] = "GOAL"
         else:
-            angleBins.append(int(newAngle / 30))
+            num = (int(newAngle / 30))
+            if num >= 8:
+                num = 7
+            angleBins.append(num)
         # calculate shooting bin
         if y > 690:
             if 2650 >= x > 2050:
@@ -156,7 +159,7 @@ def analyzeData():
     hidden_units=[37,30,19]
     #SIZE OF UNIQUE STUFF SET
     model=tf.estimator.DNNClassifier(hidden_units=hidden_units, feature_columns=feature_columns,  optimizer=optimizer_adam, n_classes=len(uniques))
-    model.train(input_fn=lambda: input_fn(features=x_train, labels=y_train, training=True), steps=1000)
+    #model.train(input_fn=lambda: input_fn(features=x, labels=y, training=True), steps=1000)
     return model
 
 #activ for neural net
@@ -186,3 +189,4 @@ processData()
 model = analyzeData()
 #predict based on single point, change the params (shot_location, save_type respectively based on GUI input)
 singlePredict(model, 1,1)
+
