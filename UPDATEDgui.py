@@ -32,7 +32,7 @@ puckX = -1
 puckY = -1
 goalieX = -1
 goalieY = -1
-#window width, window height, triangle length
+#window width, window height, triangle length... 1540 x 830 for fullscreen
 WW = 1100
 WH = 700
 tri = 100
@@ -148,35 +148,53 @@ def resetGoalieShapes(x,y):
 #Have to convert all these to shot locations on new surface, probably different
 #Also look at the glove/blocker/stick stuff
 def convert(gx, gy, pX, pY):
-   if pY > 252:
-      if 165 >= pX > 0:
+   #GET LOCATION ON ICE
+   #Y--blueline
+   if pY > 320:
+      #left
+      if pX < 165:
          sL = 12
-      elif 330 >= pX > 165:
+      #left middle
+      elif 165 <= pX < 300:
          sL = 9
-      elif 495 >= pX >= 330:
+      #right middle
+      elif 300 <= pX < 450:
          sL = 6
-      else:
+      #right
+      else: 
          sL = 3
+   #Y-- middle
    elif 230 >= pY > 126:
-      if 165 >= pX > 0:
-         sL = 11
-      elif 330 >= pX > 165:
+      #left
+      if pX < 165:
+         sL =11
+      #left middle
+      elif 165 <= pX < 300:
          sL = 8
-      elif 495 >= pX >= 330:
+      #right middle
+      elif 300 <= pX < 450:
          sL = 5
+      #right
       else:
          sL = 2
+   #Y -- net
    elif  126 >= pY > 0:
-      if 165 >= pX > 0:
+      #left
+      if pX < 165:
          sL = 10
-      elif 330 >= pX > 165:
+      #left middle
+      elif 165 <= pX < 300:
          sL = 7
-      elif 495 >= pX >= 330:
+      #right middle
+      elif 300 <= pX < 450:
          sL = 4
+      #right
       else:
          sL = 1
    else:
       sL = 13
+
+   #GET LOCATION ON GOALIE (TARGET)
    if (gx >= 775*WW/1100 and gx <=900*WW/1100 and gy >= 180*WH/700 and gy <= 550*WH/700):
       gOutput = 4
    elif (gx < 775*WW/1100 and gx >= 670*WW/1100 and gy <=340*WH/700 and gy >= 180*WH/700):
@@ -221,15 +239,15 @@ startX = 300*WW/1100
 startY = 195*WH/700
 tri = tri*WW/1100
 #START THESE FILLS ALL OFF AS fill = ""
-t0 = w.create_polygon(startX,startY,tri*math.cos(math.radians(-45))+startX,tri*math.sin(math.radians(-45))+startY,tri*math.cos(math.radians(-15))+startX,tri*math.sin(math.radians(-15))+startY,fill = "red")
-t1 = w.create_polygon(startX,startY,tri*math.cos(math.radians(-15))+startX,tri*math.sin(math.radians(-15))+startY,tri*math.cos(math.radians(15))+startX,tri*math.sin(math.radians(15))+startY,fill = "blue", stipple = "gray50")
-t2 = w.create_polygon(startX,startY,tri*math.cos(math.radians(15))+startX,tri*math.sin(math.radians(15))+startY,tri*math.cos(math.radians(45))+startX,tri*math.sin(math.radians(45))+startY,fill = "red")
-t3 = w.create_polygon(startX,startY,tri*math.cos(math.radians(45))+startX,tri*math.sin(math.radians(45))+startY,tri*math.cos(math.radians(75))+startX,tri*math.sin(math.radians(75))+startY,fill = "blue")
-t4 = w.create_polygon(startX,startY,tri*math.cos(math.radians(75))+startX,tri*math.sin(math.radians(75))+startY,tri*math.cos(math.radians(105))+startX,tri*math.sin(math.radians(105))+startY,fill = "red")
-t5 = w.create_polygon(startX,startY,tri*math.cos(math.radians(105))+startX,tri*math.sin(math.radians(105))+startY,tri*math.cos(math.radians(135))+startX,tri*math.sin(math.radians(135))+startY,fill = "blue")
-t6 = w.create_polygon(startX,startY,tri*math.cos(math.radians(135))+startX,tri*math.sin(math.radians(135))+startY,tri*math.cos(math.radians(165))+startX,tri*math.sin(math.radians(165))+startY,fill = "red")
-t7 = w.create_polygon(startX,startY,tri*math.cos(math.radians(165))+startX,tri*math.sin(math.radians(165))+startY,tri*math.cos(math.radians(195))+startX,tri*math.sin(math.radians(195))+startY,fill = "blue")
-t8 = w.create_polygon(startX,startY,tri*math.cos(math.radians(195))+startX,tri*math.sin(math.radians(195))+startY,tri*math.cos(math.radians(225))+startX,tri*math.sin(math.radians(225))+startY,fill = "red")
+t0 = w.create_polygon(startX,startY,tri*math.cos(math.radians(-45))+startX,tri*math.sin(math.radians(-45))+startY,tri*math.cos(math.radians(-15))+startX,tri*math.sin(math.radians(-15))+startY,fill = "")
+t1 = w.create_polygon(startX,startY,tri*math.cos(math.radians(-15))+startX,tri*math.sin(math.radians(-15))+startY,tri*math.cos(math.radians(15))+startX,tri*math.sin(math.radians(15))+startY,fill = "", stipple = "gray50")
+t2 = w.create_polygon(startX,startY,tri*math.cos(math.radians(15))+startX,tri*math.sin(math.radians(15))+startY,tri*math.cos(math.radians(45))+startX,tri*math.sin(math.radians(45))+startY,fill = "")
+t3 = w.create_polygon(startX,startY,tri*math.cos(math.radians(45))+startX,tri*math.sin(math.radians(45))+startY,tri*math.cos(math.radians(75))+startX,tri*math.sin(math.radians(75))+startY,fill = "")
+t4 = w.create_polygon(startX,startY,tri*math.cos(math.radians(75))+startX,tri*math.sin(math.radians(75))+startY,tri*math.cos(math.radians(105))+startX,tri*math.sin(math.radians(105))+startY,fill = "")
+t5 = w.create_polygon(startX,startY,tri*math.cos(math.radians(105))+startX,tri*math.sin(math.radians(105))+startY,tri*math.cos(math.radians(135))+startX,tri*math.sin(math.radians(135))+startY,fill = "")
+t6 = w.create_polygon(startX,startY,tri*math.cos(math.radians(135))+startX,tri*math.sin(math.radians(135))+startY,tri*math.cos(math.radians(165))+startX,tri*math.sin(math.radians(165))+startY,fill = "")
+t7 = w.create_polygon(startX,startY,tri*math.cos(math.radians(165))+startX,tri*math.sin(math.radians(165))+startY,tri*math.cos(math.radians(195))+startX,tri*math.sin(math.radians(195))+startY,fill = "")
+t8 = w.create_polygon(startX,startY,tri*math.cos(math.radians(195))+startX,tri*math.sin(math.radians(195))+startY,tri*math.cos(math.radians(225))+startX,tri*math.sin(math.radians(225))+startY,fill = "")
 
 #OUTPUT PERCENTAGES
 p0 = w.create_text(363*WW/1100, 157*WH/700, text = "")
@@ -244,7 +262,7 @@ p8 = w.create_text(237*WW/1100, 157*WH/700, text = "")
 
 #GOALIE SHAPES
 g0 = w.create_rectangle(675*WW/1100,160*WH/700,775*WW/1100, 340*WH/700, fill = 'red', stipple = 'gray50')
-g1 = w.create_rectangle(675*WW/1100,340*WH/700,775*WW/1100, 550*WH/700, fill = 'green' ,stipple = 'gray50')
+g1 = w.create_rectangle(675*WW/1100,340*WH/700,775*WW/1100, 550*WH/700, fill = 'red' ,stipple = 'gray50')
 g2 = w.create_rectangle(775*WW/1100,160*WH/700,900*WW/1100, 550*WH/700, fill = 'red' ,stipple = 'gray50')
 g3 = w.create_rectangle(900*WW/1100,160*WH/700,1015*WW/1100,340*WH/700, fill = 'red',stipple = 'gray50')
 g4 = w.create_rectangle(900*WW/1100,340*WH/700,1015*WW/1100, 550*WH/700, fill = 'red' ,stipple = 'gray50')
