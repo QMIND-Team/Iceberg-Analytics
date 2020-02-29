@@ -56,6 +56,7 @@ def processData():
     # 19 = Rebound y
     # Current data: Shot X , Shot Y, ShotLocation, Rebound (T/F), ReboundX, Rebound Y
     data = data.drop(data.columns[toDelete], axis=1)
+    print (data)
     i = 0
     angles = []
     angleBins = []
