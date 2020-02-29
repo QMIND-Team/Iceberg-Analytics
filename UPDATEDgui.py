@@ -62,7 +62,7 @@ def click(event):
             bins = singlePredict(model, iceBin,shotBin)
             #set new shapes/output colors
             resetAngleShapes(bins)
-            w.itemconfig(e1, text = "")
+            w.itemconfig(e0, text = "")
             w.itemconfig(e1, text = "")
          else:
             #error messages
@@ -132,22 +132,30 @@ def resetGoalieShapes(x,y):
    w.itemconfig(g2, fill = 'red')
    w.itemconfig(g3, fill = 'red')
    w.itemconfig(g4, fill = 'red')
+   w.itemconfig(g5, fill = 'red')
    #find where click occured
-   if (x >= 775*WW/1100 and x <=900*WW/1100 and y >= 180*WH/700 and y <= 550*WH/700):
-      w.itemconfig(g2, fill = 'green')  
-   elif (x < 775*WW/1100 and x >= 670*WW/1100 and y <=340*WH/700 and y >= 180*WH/700):
+   #LEFT (H/L)
+   if (x < 775*WW/1100 and x >= 670*WW/1100 and y <=340*WH/700 and y >= 180*WH/700):
       w.itemconfig(g0, fill = 'green') 
    elif (x < 775*WW/1100 and x > 670*WW/1100 and y >340*WH/700 and y <=550*WH/700):
       w.itemconfig(g1, fill = 'green') 
+
+   #MIDDLE (H/L)
+   elif (x >= 775*WW/1100 and x <=900*WW/1100 and y >= 180*WH/700 and y <= 340*WH/700):
+      w.itemconfig(g2, fill = 'green') 
+   elif (x>=775*WW/1100 and x <=900*WW/1100 and y > 340*WH/700 and y<= 550*WH/700):
+      w.itemconfig(g3, fil = 'green')
+   
+   #RIGHT (H/L)
    elif (x > 900*WW/1100 and x <=1020*WW/1100 and y <=340*WH/700 and y >= 180*WH/700):
-      w.itemconfig(g3, fill = 'green') 
-   elif (x > 900*WW/1100 and x <= 1020*WW/1100 and y >340*WH/700 and y <= 550*WH/700):
       w.itemconfig(g4, fill = 'green') 
+   elif (x > 900*WW/1100 and x <= 1020*WW/1100 and y >340*WH/700 and y <= 550*WH/700):
+      w.itemconfig(g5, fill = 'green') 
 
 
 #Have to convert all these to shot locations on new surface, probably different
 #Also look at the glove/blocker/stick stuff
-def convert(gx, gy, pX, pY):
+def convert(gX, gY, pX, pY):
    #GET LOCATION ON ICE
    #Y--blueline
    if pY > 320:
@@ -195,16 +203,24 @@ def convert(gx, gy, pX, pY):
       sL = 13
 
    #GET LOCATION ON GOALIE (TARGET)
-   if (gx >= 775*WW/1100 and gx <=900*WW/1100 and gy >= 180*WH/700 and gy <= 550*WH/700):
-      gOutput = 4
-   elif (gx < 775*WW/1100 and gx >= 670*WW/1100 and gy <=340*WH/700 and gy >= 180*WH/700):
-      gOutput = 1
-   elif (gx < 775*WW/1100 and gx > 670*WW/1100 and gy >340*WH/700 and gy <=550*WH/700):
-      gOutput = 2
-   elif (gx > 900*WW/1100 and gx <=1020*WW/1100 and gy <=340*WH/700 and gy >= 180*WH/700):
+   #LEFT (H/L)
+   if (gX < 775*WW/1100 and gX >= 670*WW/1100 and gY <=340*WH/700 and gY >= 180*WH/700):
       gOutput = 0
-   elif (gx > 900*WW/1100 and gx <= 1020*WW/1100 and gy >340*WH/700 and gy <= 550*WH/700):
+   elif (gX < 775*WW/1100 and gX > 670*WW/1100 and gY >340*WH/700 and gY <=550*WH/700):
       gOutput = 3
+
+   #MIDDLE (H/L)
+   elif (gX >= 775*WW/1100 and gX <=900*WW/1100 and gY >= 180*WH/700 and gY <= 340*WH/700):
+      gOutput = 1
+   elif (gX>=775*WW/1100 and gX <=900*WW/1100 and gY > 340*WH/700 and gY<= 550*WH/700):
+      gOutput = 4
+   
+   #RIGHT (H/L)
+   elif (gX > 900*WW/1100 and gX <=1020*WW/1100 and gY <=340*WH/700 and gY >= 180*WH/700):
+      gOutput = 2
+   elif (gX > 900*WW/1100 and gX <= 1020*WW/1100 and gY >340*WH/700 and gY <= 550*WH/700):
+      gOutput = 5
+   
    return sL,gOutput
 
 
@@ -263,9 +279,10 @@ p8 = w.create_text(237*WW/1100, 157*WH/700, text = "")
 #GOALIE SHAPES
 g0 = w.create_rectangle(675*WW/1100,160*WH/700,775*WW/1100, 340*WH/700, fill = 'red', stipple = 'gray50')
 g1 = w.create_rectangle(675*WW/1100,340*WH/700,775*WW/1100, 550*WH/700, fill = 'red' ,stipple = 'gray50')
-g2 = w.create_rectangle(775*WW/1100,160*WH/700,900*WW/1100, 550*WH/700, fill = 'red' ,stipple = 'gray50')
-g3 = w.create_rectangle(900*WW/1100,160*WH/700,1015*WW/1100,340*WH/700, fill = 'red',stipple = 'gray50')
-g4 = w.create_rectangle(900*WW/1100,340*WH/700,1015*WW/1100, 550*WH/700, fill = 'red' ,stipple = 'gray50')
+g2 = w.create_rectangle(775*WW/1100,160*WH/700,900*WW/1100, 340*WH/700, fill = 'red' ,stipple = 'gray50')
+g3 = w.create_rectangle(775*WW/1100,340*WH/700,900*WW/1100, 550*WH/700, fill = 'red' ,stipple = 'gray50')
+g4 = w.create_rectangle(900*WW/1100,160*WH/700,1015*WW/1100,340*WH/700, fill = 'red', stipple = 'gray50')
+g5 = w.create_rectangle(900*WW/1100,340*WH/700,1015*WW/1100,550*WH/700, fill = 'red' ,stipple = 'gray50')
 
 #ErrorMessages
 e0 = w.create_text(225*WW/1100,650*WH/700, text = "")
