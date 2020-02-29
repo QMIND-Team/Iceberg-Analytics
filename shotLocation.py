@@ -62,7 +62,7 @@ def processData():
     for i in range(0, data.shape[0]):
         x = data.iloc[i, 0]
         y = data.iloc[i, 1]
-        saveType = data.iloc[i, 3]
+        shotType = data.iloc[i, 3]
         xAngle = data.iloc[i, 5]
         yAngle = data.iloc[i, 6]
         # flip data for right side of net
@@ -127,18 +127,20 @@ def processData():
             else:
                 data.iloc[i, 2] = 13
     # Convert Save Type to int values
-        if saveType == ("SAVE_GLOVE"):
+        if shotType == ("SHOT_ATTEMPT_UPPER_LEFT"):
             data.iloc[i, 3] = 0
-        elif saveType == ("SAVE_BLOCKER"):
+        elif shotType == ("SHOT_ATTEMPT_TOP_MIDDLE"):
             data.iloc[i, 3] = 1
-        elif saveType == ("SAVE_PAD"):
+        elif shotType == ("SHOT_ATTEMPT_UPPER_RIGHT"):
             data.iloc[i, 3] = 2
-        elif saveType == ("SAVE_STICK"):
+        elif shotType == ("SHOT_ATTEMPT_LOWER_LEFT"):
             data.iloc[i, 3] = 3
-        elif saveType == ("SAVE_HAND"):
+        elif shotType == ("SHOT_ATTEMPT_BOTTOM_MIDDLE"):
             data.iloc[i, 3] = 4
-        else:
+        elif shotType == ("SHOT_ATTEMPT_LOWER_RIGHT"):
             data.iloc[i, 3] = 5
+        else:
+            data.iloc[i, 3] = 6
     # add new angles column
     data.insert(7, "Rebound_Angle", angles, True)
     data.insert(8, "Rebound_Bin", angleBins, True)
