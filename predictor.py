@@ -145,6 +145,7 @@ def analyzeData():
     tmin = min(uniques)
     for i in range(0, newData.shape[0]):
             newData.iloc[i,3] = int(newData.iloc[i,2]) - tmin    #IMPORTANT: labels have to go from 0-(max)
+    print(newData)
     #features/labels
     x = newData.drop(['RS'], axis = 1)
     y = newData['RS']
@@ -174,6 +175,7 @@ def input_fn(features, labels, training=True, batch_size=32 ):
     return dataf.batch(batch_size=batch_size)
 
 def singlePredict(model, loc, typ):
+    print(loc, ' ---', typ)
     data = [[loc,typ,1]]
     df = pd.DataFrame(data, columns = ['Shot_location', 'Save_type','Rebound_Bin'])
     df2= df['Rebound_Bin']

@@ -24,9 +24,10 @@ Sub:  (500,530) - (600,530)
 
 '''
 
-global puckX, puckY, goalieX, goalieY, model, WW, WH, tri
+global puckX, puckY, goalieX, goalieY, model, WW, WH, tri,clicked
 #build model in predictor and load
 model = startup()
+clicked = False
 #initialize values
 puckX = -1
 puckY = -1
@@ -38,40 +39,63 @@ WH = 700
 tri = 100
 #on click
 def click(event):
-   global puckX, puckY, goalieX, goalieY, model
+   global puckX, puckY, goalieX, goalieY, model, clicked
    #find where click occured
    action = findZone(event.x, event.y)
    #click occurs on the ice (left)
    if (action == "ice"):
       img.place(x=event.x-10, y=event.y-10)
       puckX, puckY = event.x, event.y
+      clicked = False
    #click occurs on the net (right)
    elif (action == "net"):
       img2.place(x=event.x-10, y=event.y-10)
       goalieX, goalieY = event.x, event.y
       resetGoalieShapes(goalieX, goalieY)
+      clicked = False
    #click occurs on submit button
    elif (action == "submit"):
       #make sure target is aimed at not
       if goalieX >= 670*WW/1100 and goalieX <= 1020*WW/1100 and goalieY >= 180*WH/700 and goalieY <= 550*WH/700:
          #make sure puck is in shooting position
          if puckX >= 0*WW/1100 and puckX <= 600*WW/1100 and puckY >= 190*WH/700 and puckY <= 600*WH/700:
-            #convert to get the bins
-            iceBin, shotBin = convert(goalieX, goalieY, puckX, puckY)
-            #get prediction/percentages
-            bins = singlePredict(model, iceBin,shotBin)
-            #set new shapes/output colors
-            resetAngleShapes(bins)
-            w.itemconfig(e0, text = "")
-            w.itemconfig(e1, text = "")
+            if not clicked:
+               clicked = True
+               #convert to get the bins
+               iceBin, shotBin = convert(goalieX, goalieY, puckX, puckY)
+               #get prediction/percentages
+               bins = singlePredict(model, iceBin,shotBin)
+               #set new shapes/output colors
+               resetAngleShapes(bins)
+               w.itemconfig(e0, text = "")
+               w.itemconfig(e1, text = "")
+               
          else:
             #error messages
             w.itemconfig(e0, text = "Error: make sure puck location is valid.")
             w.itemconfig(e1, text = "")
+            w.itemconfig(t0, fill = "")
+            w.itemconfig(t1, fill = "")
+            w.itemconfig(t2, fill = "")
+            w.itemconfig(t3, fill = "")
+            w.itemconfig(t4, fill = "")
+            w.itemconfig(t5, fill = "")
+            w.itemconfig(t6, fill = "")
+            w.itemconfig(t7, fill = "")
+            w.itemconfig(t8, fill = "")
       else:
          #error messages
          w.itemconfig(e1, text = "Error: make sure target is valid.")
          w.itemconfig(e0, text = "")
+         w.itemconfig(t0, fill = "")
+         w.itemconfig(t1, fill = "")
+         w.itemconfig(t2, fill = "")
+         w.itemconfig(t3, fill = "")
+         w.itemconfig(t4, fill = "")
+         w.itemconfig(t5, fill = "")
+         w.itemconfig(t6, fill = "")
+         w.itemconfig(t7, fill = "")
+         w.itemconfig(t8, fill = "")
 
 #find where click occured
 def findZone(x,y):
@@ -89,16 +113,17 @@ def findZone(x,y):
 
 #color shapes , change text
 def resetAngleShapes(nums):
+   print (len(nums))
    colors = []
    percents = []
    for i in range(9):
       #CHANGE THESE NUMBERS TO WHATEVER RANGE WE DECIDE
       if nums[i] <= 0.1:
-         temp = "red"
+         temp = "#98FB98"
       elif nums[i] > 0.1 and nums [i] <= 0.2:
-         temp = "blue"
+         temp = "#00FF7F"
       elif nums[i] > 0.2 and nums [i] <= 0.3:
-         temp = "yellow"
+         temp = "#7FFF00"
       else:
          temp = "green"
       colors.append(temp)
@@ -124,6 +149,10 @@ def resetAngleShapes(nums):
    w.itemconfig(p6, text = percents[6][:5])
    w.itemconfig(p7, text = percents[7][:5])
    w.itemconfig(p8, text = percents[8][:5])
+   g = "Goal: " + str(nums[9]) + "%"
+   s = "Save: " + str(nums[10]) + "%"
+   w.itemconfig(pG, text = g)
+   w.itemconfig(pS, text = s)
 
 #reset goalie colors, change green to wherever clicked
 def resetGoalieShapes(x,y):
@@ -275,6 +304,9 @@ p5 = w.create_text(265*WW/1100, 255*WH/700, text = "")
 p6 = w.create_text(240*WW/1100, 228*WH/700, text = "")
 p7 = w.create_text(227*WW/1100, 193*WH/700, text = "")
 p8 = w.create_text(237*WW/1100, 157*WH/700, text = "")
+#GOAL/SAVE
+pG = w.create_text(300*WW/1100, 160*WH/700, text="")
+pS = w.create_text(300*WW/1100, 180*WH/700, text="")
 
 #GOALIE SHAPES
 g0 = w.create_rectangle(675*WW/1100,160*WH/700,775*WW/1100, 340*WH/700, fill = 'red', stipple = 'gray50')
@@ -287,6 +319,7 @@ g5 = w.create_rectangle(900*WW/1100,340*WH/700,1015*WW/1100,550*WH/700, fill = '
 #ErrorMessages
 e0 = w.create_text(225*WW/1100,650*WH/700, text = "")
 e1 = w.create_text(875*WW/1100,650*WH/700, text = "")
+
 
 #Import images
 #load puck
