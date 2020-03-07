@@ -113,7 +113,6 @@ def findZone(x,y):
 
 #color shapes , change text
 def resetAngleShapes(nums):
-   print (len(nums))
    colors = []
    percents = []
    for i in range(9):
@@ -149,8 +148,8 @@ def resetAngleShapes(nums):
    w.itemconfig(p6, text = percents[6][:5])
    w.itemconfig(p7, text = percents[7][:5])
    w.itemconfig(p8, text = percents[8][:5])
-   g = "Goal: " + str(nums[9]) + "%"
-   s = "Save: " + str(nums[10]) + "%"
+   g = "Goal: " + (str(nums[9]))[:5] + "%"
+   s = "Cover: " + (str(nums[10]))[:5] + "%"
    w.itemconfig(pG, text = g)
    w.itemconfig(pS, text = s)
 
@@ -305,8 +304,8 @@ p6 = w.create_text(240*WW/1100, 228*WH/700, text = "")
 p7 = w.create_text(227*WW/1100, 193*WH/700, text = "")
 p8 = w.create_text(237*WW/1100, 157*WH/700, text = "")
 #GOAL/SAVE
-pG = w.create_text(300*WW/1100, 160*WH/700, text="")
-pS = w.create_text(300*WW/1100, 180*WH/700, text="")
+pG = w.create_text(300*WW/1100, 130*WH/700, text="")
+pS = w.create_text(300*WW/1100, 150*WH/700, text="")
 
 #GOALIE SHAPES
 g0 = w.create_rectangle(675*WW/1100,160*WH/700,775*WW/1100, 340*WH/700, fill = 'red', stipple = 'gray50')

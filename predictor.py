@@ -69,8 +69,6 @@ def processData():
                  data.iloc[i,3] = "GOAL"
         else:
             num = (int(newAngle / 30))
-            if num >= 8:
-                num = 7
             angleBins.append(num)
         # calculate shooting bin
         if y > 690:
